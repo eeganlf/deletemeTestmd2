@@ -82,7 +82,7 @@ student@cp:~$ curl --cert ./client.pem \
 https://k8scp:6443/api/v1/pods
 ```
 
-```
+```json
 {
   "kind": "PodList",
   "apiVersion": "v1",
@@ -90,7 +90,8 @@ https://k8scp:6443/api/v1/pods
     "selfLink": "/api/v1/pods",
     "resourceVersion": "239414"
   },
-<output_omitted>
+  <output_omitted>
+}
 ```
 
 8. If the previous command was successful, create a JSON file to create a new pod. Remember to use `find` and search for this file in the tarball output, it can save you some typing.
@@ -104,7 +105,7 @@ student@cp:~$ vim curlpod.json
 {
   "kind": "Pod",
   "apiVersion": "v1",
-  "metadata":{
+  "metadata": {
     "name": "curlpod",
     "namespace": "default",
     "labels": {
@@ -112,11 +113,17 @@ student@cp:~$ vim curlpod.json
     }
   },
   "spec": {
-    "containers": [{
-      "name": "nginx",
-      "image": "nginx",
-      "ports": [{"containerPort": 80}]
-    }]
+    "containers": [
+      {
+        "name": "nginx",
+        "image": "nginx",
+        "ports": [
+          {
+            "containerPort": 80
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -131,13 +138,15 @@ https://k8scp:6443/api/v1/namespaces/default/pods \
 -d@curlpod.json
 ```
 
-```
+```json
 {
   "kind": "Pod",
   "apiVersion": "v1",
   "metadata": {
     "name": "curlpod",
-<output_omitted>
+    <output_omitted>
+  }
+}
 ```
 
 10. Verify the new pod exists and shows a `Running` status.
@@ -234,24 +243,23 @@ student@cp:.$ python3 -m json.tool v1/serverresources.json
 ```
 
 ```json
-serverresources.json
-1{
-2"apiVersion":"v1",
-3"groupVersion":"v1",
-4"kind":"APIResourceList",
-5"resources": [
-6{
-7"kind":
-"Binding",
-8"name":"bindings",
-9"namespaced":true,
-10"singularName":"",
-11"verbs": [
-12"create"
-13]
-14},
-15<output_omitted>
-16
+{
+  "apiVersion": "v1",
+  "groupVersion": "v1",
+  "kind": "APIResourceList",
+  "resources": [
+    {
+      "kind": "Binding",
+      "name": "bindings",
+      "namespaced": true,
+      "singularName": "",
+      "verbs": [
+        "create"
+      ]
+    },
+    <output_omitted>
+  ]
+}
 ```
 
 7. Some of the objects have `shortNames`, which makes using them on the command line much easier. Locate the `shortName` for endpoints.
@@ -261,22 +269,20 @@ student@cp:.$ python3 -m json.tool v1/serverresources.json | less
 ```
 
 ```json
-serverresources.json
-1....
-2{
-3"kind":"Endpoints",
-4"name":"endpoints",
-5"namespaced":true,
-6"shortNames": [
-7
-"ep"
-8],
-9"singularName":"",
-10"verbs": [
-11"create",
-12"delete",
-13....
-14
+{
+  "kind": "Endpoints",
+  "name": "endpoints",
+  "namespaced": true,
+  "shortNames": [
+    "ep"
+  ],
+  "singularName": "",
+  "verbs": [
+    "create",
+    "delete",
+    <output_omitted>
+  ]
+}
 ```
 
 8. Use the `shortName` to view the endpoints. It should match the output from the previous command.
